@@ -18,7 +18,23 @@ Route::get('/', function () {
 Route::get('/chat' , function ()
 {
     return view('chat');
+})->middleware('auth');
+
+Route::get('/messages', function() {
+    return App\chat::with('user')->get();
 });
+
+Route::post('/messages' , function () {
+    $user = \Auth::user();
+
+    $message = $user->messages()->create([
+        'message' => request()->get('message')
+    ]);
+
+    broadcast(new MessagePosted($message , $user))->toOthers();
+    
+    return ['status' => 'OK'];
+})->middleware('auth');
 
 Auth::routes();
 

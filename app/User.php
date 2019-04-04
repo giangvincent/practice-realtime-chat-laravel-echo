@@ -39,6 +39,6 @@ class User extends Authenticatable
 
     public function messages()
     {
-        return $this->haveMany(chat::class);
+        return $this->hasMany(chat::class);
     }
 }
